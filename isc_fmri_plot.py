@@ -11,8 +11,6 @@ from scipy.stats import zscore
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
-# 进行基于功能磁共振（fMRI）数据的ISC（Intersubject Correlation，跨被试相关性）分析，并可视化大脑统计图像。
-
 affine = np.load('/Volumes/T7_Shield/baba/derivatives/affine.npy')
 header = np.load('/Volumes/T7_Shield/baba/derivatives/header.npy', allow_pickle=True)
 
@@ -20,26 +18,26 @@ n_subj = 30
 isc, isc_imgs = [], []
 for i in range(1, n_subj + 1):
     isc_subj = np.load('/Volumes/T7_Shield/SciData/fmri/isc/subj%d_isc_mean.npy' % i)
-    isc_subj = np.nan_to_num(zscore(isc_subj, nan_policy='omit'))   # 标准化 ISC 数据
+    isc_subj = np.nan_to_num(zscore(isc_subj, nan_policy='omit'))   
     isc_subj = isc_subj.reshape((97, 115, 97))
     isc_subj_img = nib.Nifti1Image(isc_subj, affine)
     isc.append(isc_subj)
     isc_imgs.append(isc_subj_img)
 
-# 二级分析 (second-level analysis)
-design_matrix = pd.DataFrame([1]*len(isc_imgs),columns=['intercept'])   # 对所有被试的均值进行值1建模
+# second-level analysis
+design_matrix = pd.DataFrame([1]*len(isc_imgs),columns=['intercept'])   
 second_level_model = SecondLevelModel(smoothing_fwhm=8,n_jobs=4)
 second_level_model.fit(isc_imgs,design_matrix=design_matrix)
 zmap = second_level_model.compute_contrast(second_level_contrast='intercept',output_type='z_score')
-zmap,_ = threshold_stats_img(zmap,height_control='fdr')  #  z 统计图像
+zmap,_ = threshold_stats_img(zmap,height_control='fdr') 
 
-# 清理并平滑 z 统计图像
+# smooth image
 zmap_data = zmap.get_fdata()
 zmap_data[zmap_data<0] = 0
 zmap = nib.Nifti1Image(zmap_data,affine)
 zmap = image.smooth_img(zmap,4)
 
-# 重采样掩膜
+# resample
 gmask = nib.load('/Volumes/T7_Shield/副本/gm_no_cerebellum_brainstem.nii.gz')
 mask = resample_to_img(gmask,zmap,interpolation='nearest')
 img = nib.Nifti1Image(zmap.get_fdata() * mask.get_fdata(),affine=affine)
