@@ -8,7 +8,7 @@ from mne.io import read_info, read_fiducials
 from mne.bem import make_scalp_surfaces
 
 # export FREESURFER_HOME=/Applications/freesurfer
-# export export SUBJECTS_DIR=/Volumes/Westside/baba/SCU/test/MRI/ #T1 MRI结构像所在路径
+# export export SUBJECTS_DIR=/Volumes/Westside/baba/SCU/test/MRI/ 
 # source $FREESURFER_HOME/SetUpFreeSurfer.sh
 # recon-all -s sub-04 -i /Volumes/Westside/baba/SCU/test/subj4/sub-04_T1w.nii -all
 # mne watershed_bem -s sub-04
