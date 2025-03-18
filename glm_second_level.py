@@ -56,13 +56,6 @@ x = nib.Nifti1Image(x,affine=gray_matter_mask.affine)
 plotting.plot_stat_map(x)
 plotting.show()
 
-# stat_map, threshold = threshold_stats_img(zmap,threshold=3, alpha=0.05, height_control='fdr')
-# stat_map_resampled = resample_to_img(stat_map,gray_matter_mask,interpolation='nearest')
-# x = stat_map_resampled.get_fdata() * gray_matter_mask.get_fdata()
-# x = nib.Nifti1Image(x,affine=gray_matter_mask.affine)
-# plotting.plot_stat_map(x)
-# plotting.show()
-
 clists={'f0':'#f4bd0b','intensity':'#68ae67','switch':'#7d4f8c'}
 cmap = LinearSegmentedColormap.from_list('%s'%group,['white',clists['%s'%group]])
 fig = plt.figure()
