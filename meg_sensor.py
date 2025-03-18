@@ -43,8 +43,8 @@ time1 = events[1,0]
 
 df_onsets = pd.read_csv('/Volumes/T7_Shield/baba/raw/scu/raw_fif/scu_bhv_onset.csv') # to ms
 df_onsets = pd.read_csv('/Users/elaine/Desktop//scu_bhv_onset.csv')
-q1_onset = time1 + int(df_onsets['q1_onset'][20]*1000)  # q1开始时间   注意[]要改动
-q5_offset = int(time1 + df_onsets['q5_onset'][20]*1000 + df_onsets['q5_rt'][20]*1000)    # q5结束时间  注意[]要改动
+q1_onset = time1 + int(df_onsets['q1_onset'][20]*1000)  
+q5_offset = int(time1 + df_onsets['q5_onset'][20]*1000 + df_onsets['q5_rt'][20]*1000)  
 new_row = np.array([q1_onset, 0, 6])
 updated_events = np.insert(events, 1, new_row, axis=0)
 time2 = updated_events[1,0]
