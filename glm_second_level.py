@@ -26,7 +26,6 @@ plotting.show()
 
 beta = nib.load('/Volumes/T7_Shield/SciData/fmri/glm/subj1_%s_beta.nii' %group)
 
-# 读取被试的 Beta Map（第一层级 GLM 结果）
 group = 'f0'
 n_subj = 30
 betas = []
@@ -38,12 +37,10 @@ for i in range(1,n_subj+1):
 	beta = nib.Nifti1Image(beta_data,affine=affine)
 	betas.append(beta)
 
-# 执行第二层级（Group-Level）GLM
 design_matrix = pd.DataFrame([1]*len(betas),columns=['intercept'])
 second_level_model = SecondLevelModel(smoothing_fwhm=8,n_jobs=4)
 second_level_model.fit(betas,design_matrix=design_matrix)   # 拟合GLM 模型，在群体水平计算统计参数。
 
-# 计算 zmap（Z 统计值），衡量整体的激活显著性
 zmap = second_level_model.compute_contrast(second_level_contrast='intercept',output_type='stat')
 zmap_data = zmap.get_fdata()
 zmap_data = -zmap_data
@@ -52,7 +49,6 @@ zmap = nib.Nifti1Image(zmap_data,beta.affine)
 plotting.plot_stat_map(zmap, title="Raw z-map")
 plotting.show()
 
-# # 进行簇级统计（Cluster-Level Inference）
 stat_map = cluster_level_inference(zmap,threshold = 2.3,alpha=0.05)
 stat_map_resampled = resample_to_img(stat_map,gray_matter_mask,interpolation='nearest')
 x = stat_map_resampled.get_fdata() * gray_matter_mask.get_fdata()
@@ -75,7 +71,6 @@ display.savefig('/Volumes/T7_Shield/SciData/%s.png' %(group))
 nib.save(x,'/Volumes/T7_Shield/SciData/cluster_%s.nii' %(group))
 plotting.show()
 
-# 用nilearn画3d立体脑图
 from nilearn import plotting
 group = 'f0'
 img = nib.load('/Volumes/T7_Shield/SciData/cluster_%s.nii'%(group))
