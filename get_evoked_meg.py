@@ -38,7 +38,7 @@ np.save('/Users/elaine/Desktop/Results/evoked_all_word.npy', all_data)
 all_data = np.load('/Users/elaine/Desktop/Results/evoked_all_word.npy')
 mean_data = np.mean(all_data,axis=0) #((3129, 64, 71)
 evk_data = np.mean(mean_data,axis=0) #(64,71)
-subj_all = np.mean(all_data,axis=1) #(30,64,71) 30个被试，64个sensor，71个time course
+subj_all = np.mean(all_data,axis=1) #(30,64,71)
 
 zsubj_all = np.nan_to_num(zscore(subj_all,axis=1,nan_policy='omit'))
 epochs = mne.read_epochs('/Volumes/T7_Shield/preproc/sub-20/sub-20_task-baba_desc-preproc_meg.fif',preload=True)
@@ -63,7 +63,7 @@ if len(good_cluster_inds) > 0:
 
 sensor = sensors[0]
 time = times[0]
-tmap = t_val[time].mean(axis=0)    # (64, ) 在时间维度上求均值，得到各个传感器的平均 t 值（即 t-map）
+tmap = t_val[time].mean(axis=0)    
 tmap = np.nan_to_num(tmap)
 mask = np.zeros(64)
 mask[sensor]=1
